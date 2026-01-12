@@ -6,6 +6,8 @@ interface SlideProps {
   isActive: boolean;
 }
 
+const LOGO_URL = "./Coasters-Logo-Web.png";
+
 export const Slide: React.FC<SlideProps> = ({ special, isActive }) => {
   if (!isActive) return null;
 
@@ -28,6 +30,11 @@ export const Slide: React.FC<SlideProps> = ({ special, isActive }) => {
           100% { transform: scale(1.1); }
         }
       `}</style>
+
+      {/* Logo Watermark */}
+      <div className="absolute top-8 left-8 z-30 opacity-90">
+        <img src={LOGO_URL} alt="Coasters Tavern" className="w-32 md:w-48 drop-shadow-lg" />
+      </div>
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-8 z-10">

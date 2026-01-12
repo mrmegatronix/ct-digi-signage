@@ -8,6 +8,8 @@ import { Settings, Play, ArrowLeft, Edit2, Clock } from 'lucide-react';
 
 /* --- Components defined in file for single-file constraints where possible, but split logically --- */
 
+const LOGO_URL = "./Coasters-Logo-Web.png";
+
 const Slideshow: React.FC<{ specials: DailySpecial[] }> = ({ specials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -37,7 +39,7 @@ const Slideshow: React.FC<{ specials: DailySpecial[] }> = ({ specials }) => {
       <Link 
         to="/admin" 
         className="absolute top-4 right-4 z-50 p-2 text-white/10 hover:text-white/80 transition-colors"
-        title="Open Dashboard"
+        title="Open Admin"
       >
         <Settings size={24} />
       </Link>
@@ -65,8 +67,10 @@ const Dashboard: React.FC<{
       <header className="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 bg-amber-500 rounded flex items-center justify-center font-serif font-bold text-zinc-900">C</div>
-             <h1 className="text-xl font-bold tracking-tight">Coasters Tavern <span className="text-zinc-500 font-normal ml-2">Digital Signage Manager</span></h1>
+             <div className="h-10 w-auto bg-white/5 rounded p-1 flex items-center justify-center">
+                <img src={LOGO_URL} alt="Coasters Tavern" className="h-full object-contain" />
+             </div>
+             <h1 className="text-xl font-bold tracking-tight">Coasters Tavern <span className="text-zinc-500 font-normal ml-2">Admin</span></h1>
           </div>
           <Link 
             to="/" 
@@ -85,7 +89,7 @@ const Dashboard: React.FC<{
               key={special.id} 
               className="bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 hover:border-zinc-700 transition group hover:shadow-2xl hover:shadow-black/50"
             >
-              <div className="h-48 relative overflow-hidden">
+              <div className="h-48 relative overflow-hidden bg-zinc-800">
                 <img src={special.imageUrl} alt={special.title} className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
                 <span className="absolute bottom-4 left-4 font-bold text-white text-lg drop-shadow-md">

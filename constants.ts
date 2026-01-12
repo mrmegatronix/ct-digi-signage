@@ -7,7 +7,7 @@ export const DEFAULT_SPECIALS: DailySpecial[] = [
     title: 'Burger Night',
     price: '$20.00',
     description: 'Start your week right with our famous gourmet burger, served with golden fries and a handle of beer or house wine.',
-    imageUrl: 'https://picsum.photos/id/163/1920/1080',
+    imageUrl: './burger-night.jpg',
     highlightColor: '#eab308' // Yellow-500
   },
   {
@@ -16,7 +16,7 @@ export const DEFAULT_SPECIALS: DailySpecial[] = [
     title: 'Steak Night',
     price: '$25.00',
     description: 'Juicy 250g Sirloin steak cooked to your liking, served with salad, fries, and your choice of mushroom or peppercorn sauce.',
-    imageUrl: 'https://picsum.photos/id/292/1920/1080',
+    imageUrl: './steak-night.jpg',
     highlightColor: '#ef4444' // Red-500
   },
   {
@@ -25,7 +25,7 @@ export const DEFAULT_SPECIALS: DailySpecial[] = [
     title: 'Schnitzel & Pint',
     price: '$22.00',
     description: 'Crispy golden chicken schnitzel topped with gravy or parmigiana style. Includes a pint of tap beer.',
-    imageUrl: 'https://picsum.photos/id/493/1920/1080',
+    imageUrl: './schnitzel.jpg',
     highlightColor: '#f97316' // Orange-500
   },
   {
@@ -34,7 +34,7 @@ export const DEFAULT_SPECIALS: DailySpecial[] = [
     title: 'BBQ Ribs',
     price: '$24.00',
     description: 'Slow-cooked pork ribs smothered in our house-made smoky BBQ sauce, served with slaw and wedges.',
-    imageUrl: 'https://picsum.photos/id/488/1920/1080',
+    imageUrl: './ribs.jpg',
     highlightColor: '#8b5cf6' // Violet-500
   },
   {
@@ -43,7 +43,7 @@ export const DEFAULT_SPECIALS: DailySpecial[] = [
     title: 'Fish & Chips',
     price: '$20.00',
     description: 'Traditional beer-battered blue cod served with tartare sauce, lemon, and a heap of chunky fries.',
-    imageUrl: 'https://picsum.photos/id/429/1920/1080',
+    imageUrl: './fish-chips.jpg',
     highlightColor: '#3b82f6' // Blue-500
   },
   {
@@ -52,7 +52,7 @@ export const DEFAULT_SPECIALS: DailySpecial[] = [
     title: 'Chef\'s Platter',
     price: '$45.00',
     description: 'A sharing board for two featuring cured meats, cheeses, pickles, crackers, and hot bites. Perfect for a relaxed evening.',
-    imageUrl: 'https://picsum.photos/id/365/1920/1080',
+    imageUrl: './platter.jpg',
     highlightColor: '#10b981' // Emerald-500
   },
   {
@@ -61,7 +61,7 @@ export const DEFAULT_SPECIALS: DailySpecial[] = [
     title: 'Sunday Roast',
     price: '$24.00',
     description: 'Classic roast of the day with roast potatoes, seasonal vegetables, yorkshire pudding and rich gravy.',
-    imageUrl: 'https://picsum.photos/id/22/1920/1080',
+    imageUrl: './roast.jpg',
     highlightColor: '#ef4444' // Red-500
   }
 ];
