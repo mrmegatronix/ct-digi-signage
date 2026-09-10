@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { DailySpecial } from './types';
 import { getSpecials, saveSpecials, updateSpecial } from './services/storageService';
 import { Slide } from './components/Slide';
@@ -12,17 +12,109 @@ const LOGO_URL = "./Coasters-Logo-Web.png";
 
 const Slideshow: React.FC<{ specials: DailySpecial[] }> = ({ specials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  const [slideDuration, setSlideDuration] = useState(8000);
+  const [hudMessage, setHudMessage] = useState<string | null>(null);
+  const hudTimeoutRef = useRef<number | null>(null);
+  const navigate = useNavigate();
+
+  const showHud = useCallback((text: string) => {
+    setHudMessage(text);
+    if (hudTimeoutRef.current) window.clearTimeout(hudTimeoutRef.current);
+    hudTimeoutRef.current = window.setTimeout(() => setHudMessage(null), 1600);
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    if (specials.length <= 1) return;
+    setCurrentIndex((prev) => (prev + 1) % specials.length);
+  }, [specials.length]);
+
+  const prevSlide = useCallback(() => {
+    if (specials.length <= 1) return;
+    setCurrentIndex((prev) => (prev - 1 + specials.length) % specials.length);
+  }, [specials.length]);
 
   useEffect(() => {
     // Only auto-rotate if there's more than one slide
-    if (specials.length <= 1) return;
+    if (specials.length <= 1 || isPaused || isLocked) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % specials.length);
-    }, 8000); // 8 seconds per slide
+    }, slideDuration);
 
     return () => clearInterval(interval);
-  }, [specials.length]);
+  }, [specials.length, isPaused, isLocked, slideDuration]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (document.activeElement?.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || (document.activeElement as HTMLElement)?.isContentEditable) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+        showHud('Prev Slide');
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextSlide();
+        showHud('Next Slide');
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setCurrentIndex(0);
+        showHud('Restart Module');
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+        }
+        showHud('Next Module');
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        setIsPaused(prev => {
+          const next = !prev;
+          showHud(next ? 'Paused' : 'Playing');
+          return next;
+        });
+      } else if (e.key === 'a' || e.key === 'A') {
+        e.preventDefault();
+        navigate('/admin');
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        window.open('remote.html', '_blank');
+      } else if (e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const secs = parseInt(e.key, 10) * 10;
+        setSlideDuration(secs * 1000);
+        showHud(`Speed: ${secs}s`);
+      } else if (e.key === '0') {
+        e.preventDefault();
+        setIsLocked(prev => {
+          const next = !prev;
+          showHud(next ? 'Slide Locked' : 'Slide Unlocked');
+          return next;
+        });
+      }
+    };
+
+    const handleMessage = (e: MessageEvent) => {
+      if (!e.data) return;
+      if (e.data.type === 'SKIP_MODULE') {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+        }
+      } else if (e.data.type === 'GOTO_FIRST') {
+        setCurrentIndex(0);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [nextSlide, prevSlide, navigate, showHud]);
 
   return (
     <div className="relative w-screen h-screen bg-black overflow-hidden">
@@ -54,6 +146,12 @@ const Slideshow: React.FC<{ specials: DailySpecial[] }> = ({ specials }) => {
           />
         ))}
       </div>
+
+      {hudMessage && (
+        <div className="fixed bottom-6 right-6 z-[99999] bg-black/85 text-white border border-white/25 px-4 py-2 rounded-xl text-sm font-semibold shadow-2xl tracking-wide pointer-events-none transition-opacity duration-200">
+          {hudMessage}
+        </div>
+      )}
     </div>
   );
 };
